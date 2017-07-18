@@ -281,11 +281,8 @@ class VRouterRemote {
     }
   }
   async getOpenwrtVersion () {
-    const cmd = 'cat /etc/banner'
-    const output = await this.remoteExec(cmd)
-    const reg = /^ *(\w+ \w+ \(.*\)) *$/mg
-    const match = reg.exec(output)
-    return (match && match[1]) || ''
+    const cmd = 'cat /etc/openwrt_version'
+    return this.remoteExec(cmd)
   }
 
   // proxies

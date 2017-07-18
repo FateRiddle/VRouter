@@ -1562,7 +1562,6 @@ class VRouter {
         port: this.config.vrouter.port,
         username: this.config.vrouter.username,
         password: this.config.vrouter.password,
-        keepaliveInterval: 60000,
         readyTimeout: 1500
       })
     })

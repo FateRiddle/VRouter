@@ -544,9 +544,25 @@ const myApp = new Vue({
       this.status.isSsRunning = await this.remote.isSsRunning()
       this.status.isSsrRunning = await this.remote.isSsrRunning()
       this.status.isKtRunning = await this.remote.isKtRunning()
+    },
+    async keepConnAlive () {
+      try {
+        await this.remote.getBrlan()
+      } catch (err) {
+        const state = await vrouter.getvmState()
+        if (state !== 'running') {
+          winston.error('vrouter has been shutdown. quit the ui.')
+          await vrouter.changeRouteTo('wifi')
+          await app.quit()
+        } else {
+          winston.info('vrouter connection lost. reconnect to it.')
+          this.remote = await vrouter.connect()
+        }
+      }
     }
   },
   async mounted () {
+    setInterval(this.keepConnAlive, 30000)
     try {
       this.remote = await vrouter.connect()
       await this.checkTrafficStatus()
